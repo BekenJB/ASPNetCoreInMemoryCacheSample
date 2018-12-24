@@ -26,7 +26,7 @@ namespace ASPNetCoreInMemoryCacheSample.Controllers
             string state = string.Empty;
             if (!_cache.TryGetValue("CashedStatesList", out Dictionary<string, string> states))
             {
-                Console.WriteLine("Cache miss....loading from database into cache");
+                Console.WriteLine("Loading from database or json file into cache");
 
                 states =
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(
@@ -34,8 +34,8 @@ namespace ASPNetCoreInMemoryCacheSample.Controllers
 
                 MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25), // cache will expire in 25 seconds
-                    SlidingExpiration = TimeSpan.FromSeconds(5) // caceh will expire if inactive for 5 seconds
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(300), // cache will expire in 300 seconds or 5 minutes
+                    SlidingExpiration = TimeSpan.FromSeconds(60) // caceh will expire if inactive for 60 seconds
                 };
 
                 if (states != null)
@@ -43,7 +43,7 @@ namespace ASPNetCoreInMemoryCacheSample.Controllers
             }
             else
             {
-                Console.WriteLine("Cache hit");
+                Console.WriteLine("***Data Found in Cache...***");
             }
 
             if (states != null)
